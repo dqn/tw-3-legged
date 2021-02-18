@@ -40,3 +40,10 @@ export async function requestToken(
       z.string().parse(params.get("oauth_callback_confirmed")) === "true",
   };
 }
+
+export function generateAuthUrl(oauthToken: string): string {
+  const url = new URL("https://api.twitter.com/oauth/authorize");
+  url.search = new URLSearchParams({ oauth_token: oauthToken }).toString();
+
+  return url.toString();
+}

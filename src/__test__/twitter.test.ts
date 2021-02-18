@@ -1,4 +1,4 @@
-import { requestToken } from "./../twitter";
+import { requestToken, generateAuthUrl } from "./../twitter";
 import { request } from "./../request";
 
 const consumerKey = process.env.CONSUMER_KEY!;
@@ -13,7 +13,6 @@ const requestActual = jest.requireActual("./../request")
 
 describe("requestToken", () => {
   it("test", async () => {
-    // requestMock.mockImplementation(requestActual);
     requestMock.mockResolvedValue(
       "oauth_token=XXX&oauth_token_secret=YYY&oauth_callback_confirmed=true",
     );
@@ -24,5 +23,34 @@ describe("requestToken", () => {
       oauthTokenSecret: "YYY",
       oauthCallbackConfirmed: true,
     });
+  });
+
+  xit("test actual", async () => {
+    requestMock.mockImplementation(requestActual);
+    const res = await requestToken(consumerKey, consumerSecret, redirectUri);
+    console.log(res);
+
+    expect(res).not.toBeUndefined();
+  });
+});
+
+describe("generateAuthUrl", () => {
+  it("test", () => {
+    const url = generateAuthUrl("XXX");
+
+    expect(url).toBe("https://api.twitter.com/oauth/authorize?oauth_token=XXX");
+  });
+
+  xit("test actual", async () => {
+    requestMock.mockImplementation(requestActual);
+    const { oauthToken } = await requestToken(
+      consumerKey,
+      consumerSecret,
+      redirectUri,
+    );
+    const url = generateAuthUrl(oauthToken);
+    console.log(url);
+
+    expect(url).not.toBeUndefined();
   });
 });

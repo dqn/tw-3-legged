@@ -47,3 +47,32 @@ export function generateAuthUrl(oauthToken: string): string {
 
   return url.toString();
 }
+
+export type AccessTokenResponse = {
+  oauthToken: string;
+  oauthTokenSecret: string;
+  userId: number;
+  screenName: string;
+};
+
+export async function accessToken(
+  oauthToken: string,
+  oauthVerifier: string,
+): Promise<AccessTokenResponse> {
+  const url = new URL("https://api.twitter.com/oauth/access_token");
+  url.search = new URLSearchParams({
+    oauth_token: oauthToken,
+    oauth_verifier: oauthVerifier,
+  }).toString();
+
+  const res = await request(url, { method: "POST" });
+
+  const params = new URLSearchParams(res);
+
+  return {
+    oauthToken: z.string().parse(params.get("oauth_token")),
+    oauthTokenSecret: z.string().parse(params.get("oauth_token_secret")),
+    userId: Number(z.string().parse(params.get("user_id"))),
+    screenName: z.string().parse(params.get("screen_name")),
+  };
+}

@@ -1,9 +1,11 @@
-import { requestToken, generateAuthUrl } from "./../twitter";
+import { requestToken, generateAuthUrl, accessToken } from "./../twitter";
 import { request } from "./../request";
 
 const consumerKey = process.env.CONSUMER_KEY!;
 const consumerSecret = process.env.CONSUMER_SECRET!;
 const redirectUri = process.env.REDIRECT_URI!;
+const oauthToken = process.env.OAUTH_TOKEN!;
+const oauthVerifier = process.env.OAUTH_VERIFIER!;
 
 jest.mock("./../request");
 const requestMock = request as jest.MockedFunction<typeof request>;
@@ -52,5 +54,29 @@ describe("generateAuthUrl", () => {
     console.log(url);
 
     expect(url).not.toBeUndefined();
+  });
+});
+
+describe("accessToken", () => {
+  it("test", async () => {
+    requestMock.mockResolvedValue(
+      "oauth_token=XXX&oauth_token_secret=YYY&user_id=42&screen_name=foo",
+    );
+    const res = await accessToken("XXX", "YYY");
+
+    expect(res).toEqual({
+      oauthToken: "XXX",
+      oauthTokenSecret: "YYY",
+      userId: 42,
+      screenName: "foo",
+    });
+  });
+
+  xit("test actual", async () => {
+    requestMock.mockImplementation(requestActual);
+    const res = await accessToken(oauthToken, oauthVerifier);
+    console.log(res);
+
+    expect(res).not.toBeUndefined();
   });
 });

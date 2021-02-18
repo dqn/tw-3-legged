@@ -1,4 +1,6 @@
-import { createHmac, randomBytes } from "crypto";
+import { createHmac } from "crypto";
+import { getRandomBytes } from "./byte";
+import { getNow } from "./date";
 
 function encodeAndJoinArray(arr: string[], separator: string): string {
   return arr.map(encodeURIComponent).join(separator);
@@ -39,9 +41,9 @@ export function makeAuthorizationHeader(
   const oauthParams: Record<string, string> = {
     oauth_consumer_key: consumerKey,
     oauth_signature_method: "HMAC-SHA1",
-    oauth_timestamp: Math.floor(Date.now() / 1_000).toString(),
+    oauth_timestamp: Math.floor(getNow() / 1_000).toString(),
     oauth_version: "1.0a",
-    oauth_nonce: randomBytes(32).toString("base64"),
+    oauth_nonce: getRandomBytes(32).toString("base64"),
     ...additionalParams,
   };
 

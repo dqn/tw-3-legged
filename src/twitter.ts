@@ -8,7 +8,7 @@ export type RequestTokenResponse = {
   oauthCallbackConfirmed: boolean;
 };
 
-export async function requestToken(
+export async function getRequestToken(
   consumerKey: string,
   consumerSecret: string,
   callbackUrl: string,
@@ -46,7 +46,7 @@ export async function generateAuthUrl(
   consumerSecret: string,
   callbackUrl: string,
 ): Promise<string> {
-  const { oauthToken } = await requestToken(
+  const { oauthToken } = await getRequestToken(
     consumerKey,
     consumerSecret,
     callbackUrl,
@@ -65,7 +65,7 @@ export type AccessTokenResponse = {
   screenName: string;
 };
 
-export async function accessToken(
+export async function getAccessToken(
   oauthToken: string,
   oauthVerifier: string,
 ): Promise<AccessTokenResponse> {

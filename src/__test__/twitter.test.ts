@@ -1,4 +1,4 @@
-import { requestToken, generateAuthUrl, accessToken } from "./../twitter";
+import { getRequestToken, generateAuthUrl, getAccessToken } from "./../twitter";
 import { request } from "./../request";
 
 const consumerKey = process.env.CONSUMER_KEY!;
@@ -18,7 +18,7 @@ describe("requestToken", () => {
     requestMock.mockResolvedValue(
       "oauth_token=XXX&oauth_token_secret=YYY&oauth_callback_confirmed=true",
     );
-    const res = await requestToken(consumerKey, consumerSecret, redirectUri);
+    const res = await getRequestToken(consumerKey, consumerSecret, redirectUri);
 
     expect(res).toEqual({
       oauthToken: "XXX",
@@ -29,7 +29,7 @@ describe("requestToken", () => {
 
   xit("test actual", async () => {
     requestMock.mockImplementation(requestActual);
-    const res = await requestToken(consumerKey, consumerSecret, redirectUri);
+    const res = await getRequestToken(consumerKey, consumerSecret, redirectUri);
     console.log(res);
 
     expect(res).not.toBeUndefined();
@@ -60,7 +60,7 @@ describe("accessToken", () => {
     requestMock.mockResolvedValue(
       "oauth_token=XXX&oauth_token_secret=YYY&user_id=42&screen_name=foo",
     );
-    const res = await accessToken("XXX", "YYY");
+    const res = await getAccessToken("XXX", "YYY");
 
     expect(res).toEqual({
       oauthToken: "XXX",
@@ -72,7 +72,7 @@ describe("accessToken", () => {
 
   xit("test actual", async () => {
     requestMock.mockImplementation(requestActual);
-    const res = await accessToken(oauthToken, oauthVerifier);
+    const res = await getAccessToken(oauthToken, oauthVerifier);
     console.log(res);
 
     expect(res).not.toBeUndefined();

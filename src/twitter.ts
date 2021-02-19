@@ -41,7 +41,17 @@ export async function requestToken(
   };
 }
 
-export function generateAuthUrl(oauthToken: string): string {
+export async function generateAuthUrl(
+  consumerKey: string,
+  consumerSecret: string,
+  callbackUrl: string,
+): Promise<string> {
+  const { oauthToken } = await requestToken(
+    consumerKey,
+    consumerSecret,
+    callbackUrl,
+  );
+
   const url = new URL("https://api.twitter.com/oauth/authorize");
   url.search = new URLSearchParams({ oauth_token: oauthToken }).toString();
 

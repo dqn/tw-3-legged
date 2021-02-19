@@ -37,20 +37,18 @@ describe("requestToken", () => {
 });
 
 describe("generateAuthUrl", () => {
-  it("test", () => {
-    const url = generateAuthUrl("XXX");
+  it("test", async () => {
+    requestMock.mockResolvedValue(
+      "oauth_token=XXX&oauth_token_secret=YYY&oauth_callback_confirmed=true",
+    );
+    const url = await generateAuthUrl("XXX", "YYY", "ZZZ");
 
     expect(url).toBe("https://api.twitter.com/oauth/authorize?oauth_token=XXX");
   });
 
   xit("test actual", async () => {
     requestMock.mockImplementation(requestActual);
-    const { oauthToken } = await requestToken(
-      consumerKey,
-      consumerSecret,
-      redirectUri,
-    );
-    const url = generateAuthUrl(oauthToken);
+    const url = await generateAuthUrl(consumerKey, consumerSecret, redirectUri);
     console.log(url);
 
     expect(url).not.toBeUndefined();

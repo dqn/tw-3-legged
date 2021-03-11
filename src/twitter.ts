@@ -61,7 +61,7 @@ export async function generateAuthUrl(
 export type AccessTokenResponse = {
   oauthToken: string;
   oauthTokenSecret: string;
-  userId: number;
+  userId: string;
   screenName: string;
 };
 
@@ -82,7 +82,7 @@ export async function getAccessToken(
   return {
     oauthToken: z.string().parse(params.get("oauth_token")),
     oauthTokenSecret: z.string().parse(params.get("oauth_token_secret")),
-    userId: Number(z.string().parse(params.get("user_id"))),
+    userId: z.string().parse(params.get("user_id")),
     screenName: z.string().parse(params.get("screen_name")),
   };
 }

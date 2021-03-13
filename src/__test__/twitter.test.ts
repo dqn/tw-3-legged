@@ -65,7 +65,7 @@ describe("accessToken", () => {
     expect(res).toEqual({
       oauthToken: "XXX",
       oauthTokenSecret: "YYY",
-      userId: 42,
+      userId: "42",
       screenName: "foo",
     });
   });
